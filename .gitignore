@@ -1,0 +1,7 @@
+data/*.csv
+notebooks/*.csv
+notebooks/results.md
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.DS_Store
