@@ -43,28 +43,3 @@ Next steps: test whether the edge is robust to different residual
 windows and refit frequencies, extend to hourly temperature contracts,
 and evaluate whether the small Brier and log loss improvement translates
 to a viable edge after Kalshi's fees and spread on real contract prices.
-
-## Tests
-
-`tests/test_pipeline.py` verifies the pipeline end-to-end on synthetic
-in-memory data (never written to disk or committed) so correctness can be
-checked without network access to NOAA. Run with:
-
-```bash
-pip install pytest
-python -m pytest tests/ -v
-```
-
-Note: `backtest.py`'s `--refit-every` controls how often the model
-re-fits during the walk-forward loop. Refitting every single day is most
-correct but slow; refitting every N days reuses the same fit for N
-consecutive test dates as a speed/accuracy tradeoff. Set it to 1 for a
-maximally rigorous (but slower) backtest.
-
-## Setup
-
-```bash
-pip install -r requirements.txt
-python src/fetch_data.py --station GHCND:USW00094728 --start 2000-01-01
-python src/backtest.py --target-month 7  # backtest July contracts, e.g.
-```
