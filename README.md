@@ -5,36 +5,26 @@ for New York City (NWS Central Park station, `GHCND:USW00094728`), built to
 price and backtest binary/bracket temperature contracts against real NWS
 observations.
 
-## Why Central Park
-
-Kalshi's NYC temperature markets (`KXHIGHNY` and similar tickers) settle
-against the NWS Central Park station reading. That station has one of the
-longest continuous, high-quality daily records in the NOAA GHCN-Daily
-network, which makes it a good fit for both climatological baselines and
-short-window model fitting.
-
 ## What this does
 
-1. **`src/fetch_data.py`** — pulls daily max/min temperature history for
+1. **`src/fetch_data.py`** pulls daily max/min temperature history for
    Central Park from NOAA's public API (`ncei.noaa.gov`), caches it locally
    as CSV.
-2. **`src/features.py`** — builds a feature set per calendar day: day-of-year
+2. **`src/features.py`** builds a feature set per calendar day: day-of-year
    harmonic terms, trailing N-day anomaly, ENSO-adjustable trend term,
    lagged autocorrelation features.
-3. **`src/model.py`** — fits a day-of-year seasonal baseline (harmonic
+3. **`src/model.py`** fits a day-of-year seasonal baseline (harmonic
    regression) plus a residual model (Gaussian or skew-normal residual
    distribution, fit per rolling window) to produce a full predictive
-   distribution for a given target date, not just a point forecast. This
-   distribution is what actually prices a Kalshi bracket contract — you need
-   P(T > threshold), not just an expected value.
-2. **`src/kalshi_pricing.py`** — converts the predictive distribution into
+   distribution for a given target date, not just a point forecast. 
+2. **`src/kalshi_pricing.py`** converts the predictive distribution into
    implied probabilities for arbitrary Kalshi strike brackets, and compares
    against a naive climatological-only baseline.
-3. **`src/backtest.py`** — walk-forward backtest: for each historical date,
+3. **`src/backtest.py`** walk-forward backtest: for each historical date,
    fit only on data available before that date, generate a forecast
    distribution, and score it (Brier score, log loss, calibration) against
    what actually happened.
-4. **`notebooks/`** — exploratory analysis and result plots.
+4. **`notebooks/`** exploratory analysis and result plots.
 
 ## Status
 
